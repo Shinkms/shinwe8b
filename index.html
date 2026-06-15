@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shin</title>
+  <link rel="icon" href="./public/asset/logo-pon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    :root {
+      --bg: #0f1115;
+      --surface: #181b20;
+      --surface2: #22262d;
+      --border: #303540;
+      --text: #f5f7fa;
+      --text2: #c2c8d0;
+      --text3: #8f98a3;
+      --accent: #ff7a3d;
+      --tag-bg: #2b1f1a;
+      --shadow: 0 4px 24px rgba(0,0,0,.35);
+      --radius: 12px;
+    }
+    body.light {
+      --bg: #f8f7f4;
+      --surface: #fff;
+      --surface2: #f2f0ec;
+      --border: #e8e4dd;
+      --text: #1a1815;
+      --text2: #6b655c;
+      --text3: #a09990;
+      --accent: #e85c2b;
+      --tag-bg: #fdf3ee;
+      --shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.04);
+    }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Kanit, system-ui, sans-serif;
+      letter-spacing: 0;
+    }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+    .header-inner {
+      max-width: 1280px;
+      height: 64px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--text);
+      font-size: 20px;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .logo img { width: 30px; height: 30px; border-radius: 8px; }
+    .logo:hover { color: var(--accent); }
+    .search-wrap {
+      flex: 1;
+      max-width: 400px;
+      margin-left: auto;
+      position: relative;
+    }
+    .search-wrap svg {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text3);
+      pointer-events: none;
+    }
+    #search {
+      width: 100%;
+      padding: 8px 12px 8px 36px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      outline: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 14px Kanit, sans-serif;
+    }
+    #search:focus { border-color: var(--accent); }
+    .header-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 34px;
+      padding: 6px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--text2);
+      font: 13px Kanit, sans-serif;
+      cursor: pointer;
+    }
+    .header-btn:hover { background: var(--surface2); color: var(--text); }
+    #homePage {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 32px 24px 48px;
+    }
+    .btn-logo { width: 20px; height: 20px; object-fit: contain; }
+    .home-group { margin-bottom: 28px; }
+    .cat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    .cat-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 64px;
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      text-align: left;
+      font: 500 13.5px Kanit, sans-serif;
+      cursor: pointer;
+      transition: transform .15s, border-color .15s, background .15s;
+    }
+    .cat-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent);
+      border-left-color: var(--accent);
+      background: var(--tag-bg);
+      box-shadow: var(--shadow);
+    }
+    .cat-card-text { flex: 1; line-height: 1.3; overflow-wrap: anywhere; }
+    .cat-card-count, .cat-count {
+      flex-shrink: 0;
+      padding: 2px 7px;
+      border-radius: 20px;
+      background: var(--surface2);
+      color: var(--text3);
+      font-size: 11px;
+    }
+    #catalogPage { display: none; }
+    .page {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px;
+      display: flex;
+      gap: 24px;
+    }
+    .sidebar { width: 240px; flex-shrink: 0; }
+    .back-btn {
+      padding: 0 0 16px;
+      border: 0;
+      background: none;
+      color: var(--text3);
+      font: 13px Kanit, sans-serif;
+      cursor: pointer;
+    }
+    .back-btn:hover { color: var(--accent); }
+    .sidebar-group { margin-top: 16px; }
+    .cat-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      padding: 8px 10px;
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--text2);
+      text-align: left;
+      font: 13px Kanit, sans-serif;
+      cursor: pointer;
+    }
+    .cat-btn:hover { background: var(--surface2); color: var(--text); }
+    .cat-btn.active { background: var(--tag-bg); color: var(--accent); font-weight: 500; }
+    .cat-btn .cat-count { margin-left: auto; }
+    .main { flex: 1; min-width: 0; }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .section-left { display: flex; align-items: baseline; gap: 10px; min-width: 0; }
+    .section-title { font-size: 20px; font-weight: 500; overflow-wrap: anywhere; }
+    .section-count { color: var(--text3); font-size: 13px; white-space: nowrap; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .card {
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      transition: transform .18s, box-shadow .18s;
+    }
+    .card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+    .card-img, .card-img-placeholder {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      background: var(--surface2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text3);
+      font-size: 32px;
+      object-fit: cover;
+    }
+    .card-img { display: block; }
+    .card-body { padding: 12px 14px 14px; }
+    .card-name { margin-bottom: 4px; font-size: 14px; font-weight: 500; line-height: 1.3; }
+    .card-desc {
+      min-height: 38px;
+      margin-bottom: 10px;
+      color: var(--text2);
+      font-size: 12.5px;
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .section-header { justify-content: space-between; }
+    .buy-btn {
+      min-height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5px 4px;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 500;
+      line-height: 1.2;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .buy-btn.has-link:hover { opacity: .78; }
+    .btn-buy { background: #e8f4fe; color: #1563a8; border-color: #b3d4f7; }
+    .btn-disabled { background: var(--surface2); color: var(--text3); border-color: var(--border); opacity: .45; pointer-events: none; }
+    .loading, .empty { padding: 60px 24px; color: var(--text2); text-align: center; }
+    .spinner {
+      width: 32px;
+      height: 32px;
+      margin: 0 auto 16px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .cat-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .header-inner { height: 58px; padding: 0 10px; gap: 6px; }
+      .logo { font-size: 16px; }
+      .logo img { width: 26px; height: 26px; }
+      .search-wrap { min-width: 116px; max-width: none; }
+      #search { font-size: 13px; padding: 7px 10px 7px 32px; }
+      .theme-text { display: none; }
+      #homePage { padding: 16px 12px 24px; }
+      .page { gap: 12px; padding: 12px; align-items: flex-start; }
+      .sidebar { width: 120px; min-width: 120px; position: sticky; top: 70px; }
+      .cat-btn { padding: 7px 6px; gap: 5px; font-size: 11px; }
+      .cat-count { padding: 1px 5px; font-size: 10px; }
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+      .section-header { align-items: flex-start; flex-direction: column; gap: 10px; }
+      .card-body { padding: 10px; }
+      .card-name { font-size: 13px; }
+      .card-desc { min-height: 34px; font-size: 11px; }
+      .buy-btn { padding: 5px 2px; font-size: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <div class="logo" id="logoBtn"><img src="./public/asset/logo-pon.svg" alt="">แนะนำของ</div>
+      <div class="search-wrap">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" id="search" placeholder="Search ค้นหา...">
+      </div>
+      <button class="header-btn theme-btn" id="themeBtn"><span class="theme-icon">🌙</span><span class="theme-text">Dark</span></button>
+    </div>
+  </header>
+
+  <div id="homePage">
+    <div class="loading"><div class="spinner"></div><div>Loading...</div></div>
+  </div>
+
+  <div id="catalogPage">
+    <div class="page">
+      <aside class="sidebar">
+        <button class="back-btn" id="backBtn">← กลับหน้าแรก</button>
+        <div id="catList">
+          <button class="cat-btn active" data-cat="all">ทั้งหมด <span class="cat-count" id="countAll">—</span></button>
+        </div>
+      </aside>
+      <main class="main">
+        <div class="section-header">
+          <div class="section-left">
+            <div class="section-title" id="sectionTitle">สินค้าทั้งหมด</div>
+            <div class="section-count" id="sectionCount"></div>
+          </div>
+        </div>
+        <div id="content"></div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    const SHEET_CSV_URL = './public/products.csv';
+    const icon = name => './public/asset/' + name + '.svg';
+    let allItems = [];
+    let currentCat = 'all';
+    let searchQ = '';
+    const TOPICS = [
+      { label: 'Mouse', match: category => category === 'Mouse' },
+      { label: 'Keyboard', match: category => category === 'Keyboard' },
+      { label: 'Earpod', match: category => category === 'Earpod' },
+      { label: 'Mousepad', match: category => category === 'Mousepad' },
+      { label: 'Feet', match: category => category === 'Feet' },
+      { label: 'Monitor', match: category => category === 'Monitor' },
+      { label: 'Mic', match: category => category === 'Mic' },
+      { label: 'Table/chair', match: category => category === 'Table/chair' }
+    ];
+
+
+    function esc(value) {
+      return String(value || '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+    }
+
+    function csvToObjects(csv) {
+      const rows = [];
+      let row = [], cell = '', inQuotes = false;
+      for (let i = 0; i < csv.length; i++) {
+        const char = csv[i], next = csv[i + 1];
+        if (char === '"' && inQuotes && next === '"') { cell += '"'; i++; }
+        else if (char === '"') inQuotes = !inQuotes;
+        else if (char === ',' && !inQuotes) { row.push(cell); cell = ''; }
+        else if ((char === '\n' || char === '\r') && !inQuotes) {
+          if (cell || row.length) { row.push(cell); rows.push(row); row = []; cell = ''; }
+          if (char === '\r' && next === '\n') i++;
+        } else cell += char;
+      }
+      if (cell || row.length) { row.push(cell); rows.push(row); }
+      const headers = rows.shift().map(h => h.trim());
+      return rows.map(r => Object.fromEntries(headers.map((h, i) => [h, (r[i] || '').trim()])));
+    }
+
+    async function loadData() {
+      try {
+        const res = await fetch(SHEET_CSV_URL);
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        allItems = csvToObjects(await res.text())
+          .filter(i => i.Category && i.product)
+          .map(item => {
+            const topic = TOPICS.find(t => t.match(item.Category || ''));
+            return topic ? { ...item, Topic: topic.label } : null;
+          })
+          .filter(Boolean);
+        buildHomePage();
+        buildSidebar();
+        checkHash();
+      } catch (err) {
+        document.getElementById('homePage').innerHTML = '<div class="empty">⚠️ โหลดข้อมูลไม่สำเร็จ: ' + esc(err.message) + '</div>';
+      }
+    }
+
+    function groupedItems() {
+      return TOPICS.map(topic => ({
+        name: topic.label,
+        count: allItems.filter(item => item.Topic === topic.label).length
+      })).filter(topic => topic.count > 0);
+    }
+
+    function buildHomePage() {
+      const topics = groupedItems();
+      const cards = topics.map(topic =>
+        `<button class="cat-card" data-home-cat="${esc(topic.name)}"><span class="cat-card-text">${esc(topic.name)}</span><span class="cat-card-count">${topic.count}</span></button>`
+      ).join('');
+      document.getElementById('homePage').innerHTML = '<div class="cat-grid">' + cards + '</div>';
+      document.querySelectorAll('[data-home-cat]').forEach(btn => btn.addEventListener('click', () => goToCat(btn.dataset.homeCat)));
+    }
+
+    function buildSidebar() {
+      const topics = groupedItems();
+      document.getElementById('countAll').textContent = allItems.length;
+      const list = document.getElementById('catList');
+      list.querySelectorAll('[data-cat]:not([data-cat="all"]), .sidebar-group').forEach(el => el.remove());
+      topics.forEach(topic => {
+        const b = document.createElement('button');
+        b.className = 'cat-btn';
+        b.dataset.cat = topic.name;
+        b.title = topic.name;
+        b.innerHTML = esc(topic.name) + ' <span class="cat-count">' + topic.count + '</span>';
+        b.addEventListener('click', () => goToCat(topic.name));
+        list.appendChild(b);
+      });
+    }
+
+    function getFiltered() {
+      let items = currentCat === 'all' ? [...allItems] : allItems.filter(i => i.Topic === currentCat);
+      if (searchQ) {
+        const q = searchQ.toLowerCase();
+        items = items.filter(i => [i.product, i.description, i.Category, i.Topic].some(v => String(v || '').toLowerCase().includes(q)));
+      }
+      return items;
+    }
+
+    function makeBtn(url) {
+      return url
+        ? `<a href="${esc(url)}" target="_blank" rel="noopener" class="buy-btn has-link btn-buy">ดูสินค้า</a>`
+        : `<span class="buy-btn btn-disabled">ไม่มีลิงก์</span>`;
+    }
+
+    function getBuyLink(item) {
+      return item.shopee || item.lazada || item.aliexpress || item.taobao || item.other || '';
+    }
+
+    function renderCard(item) {
+      const cover = item.cover || '';
+      const image = cover
+        ? `<img class="card-img" src="${esc(cover)}" alt="${esc(item.product)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="card-img-placeholder" style="display:none">📦</div>`
+        : '<div class="card-img-placeholder">📦</div>';
+      const buyLink = getBuyLink(item);
+      return `<article class="card">
+        ${image}
+        <div class="card-body">
+          <div class="card-name">${esc(item.product)}</div>
+          <div class="card-desc">${esc(item.description)}</div>
+          ${makeBtn(buyLink)}
+        </div>
+      </article>`;
+    }
+
+    function render() {
+      const items = getFiltered();
+      document.getElementById('sectionTitle').textContent = currentCat === 'all' ? 'สินค้าทั้งหมด' : currentCat;
+      document.getElementById('sectionCount').textContent = items.length + ' รายการ';
+      document.getElementById('content').innerHTML = items.length
+        ? '<div class="grid">' + items.map(renderCard).join('') + '</div>'
+        : '<div class="empty">ไม่พบสินค้าที่ตรงกัน</div>';
+    }
+
+    function goToCat(cat, updateHash = true) {
+      document.getElementById('homePage').style.display = 'none';
+      document.getElementById('catalogPage').style.display = 'block';
+      currentCat = cat;
+      document.querySelectorAll('.cat-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
+      render();
+      scrollTo(0, 0);
+      if (updateHash) history.replaceState(null, '', cat === 'all' ? '#' : '#cat=' + encodeURIComponent(cat));
+    }
+
+    function showHome() {
+      document.getElementById('catalogPage').style.display = 'none';
+      document.getElementById('homePage').style.display = 'block';
+      currentCat = 'all';
+      searchQ = '';
+      document.getElementById('search').value = '';
+      document.querySelectorAll('.cat-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === 'all'));
+      history.replaceState(null, '', '#');
+      scrollTo(0, 0);
+    }
+
+    function checkHash() {
+      const match = decodeURIComponent(location.hash).match(/^#cat=(.+)$/);
+      if (match && allItems.length) goToCat(match[1], false);
+    }
+
+    document.getElementById('search').addEventListener('input', e => {
+      searchQ = e.target.value.trim();
+      if (searchQ) {
+        document.getElementById('homePage').style.display = 'none';
+        document.getElementById('catalogPage').style.display = 'block';
+        currentCat = 'all';
+        document.querySelectorAll('.cat-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === 'all'));
+        render();
+      } else showHome();
+    });
+    document.querySelector('[data-cat="all"]').addEventListener('click', () => goToCat('all'));
+    document.getElementById('backBtn').addEventListener('click', showHome);
+    document.getElementById('logoBtn').addEventListener('click', showHome);
+    const themeBtn = document.getElementById('themeBtn');
+    function setTheme(mode) {
+      document.body.classList.toggle('light', mode === 'light');
+      themeBtn.innerHTML = mode === 'light'
+        ? '<span class="theme-icon">☀️</span><span class="theme-text">Light</span>'
+        : '<span class="theme-icon">🌙</span><span class="theme-text">Dark</span>';
+      localStorage.setItem('theme', mode);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+    themeBtn.addEventListener('click', () => setTheme(document.body.classList.contains('light') ? 'dark' : 'light'));
+    addEventListener('hashchange', checkHash);
+    addEventListener('popstate', checkHash);
+    loadData();
+  </script>
+</body>
+</html>
